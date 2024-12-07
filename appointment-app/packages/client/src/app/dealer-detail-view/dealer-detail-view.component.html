@@ -1,0 +1,190 @@
+<div class="container py-3">
+    <div class="row my-3">
+        <div class="col">
+            <table class="table table-striped table-hover">
+                <thead class="thead-dark">
+                <tr>
+                    <th>PLZ</th>
+                    <th>Straße</th>
+                    <th>Haus Nr.</th>
+                    <th>Stadt</th>
+                    <th>Öffnungszeiten</th>
+                    <th></th>
+                    <th></th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr *ngFor="let dealer of dealerList">
+                    <td>{{ dealer.postalCode }}</td>
+                    <td>{{ dealer.street }}</td>
+                    <td>{{ dealer.houseNumber }}</td>
+                    <td>{{ dealer.city }}</td>
+                    <td>{{ dealer.openingTime }} Uhr - {{ dealer.closingTime }} Uhr</td>
+                    <td>
+                        <button (click)="openEditModalDealer(editDealerModal, dealer)" class="btn btn-sm edit-btn">
+                            <i class="bi bi-pencil-square"></i>
+                        </button>
+                    </td>
+                    <td>
+                        <button (click)="deleteDealer(dealer.id)" class="btn btn-sm delete-btn">
+                            <i class="bi bi-trash3-fill"></i>
+                        </button>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="row my-3">
+        <div class="col">
+            <button (click)="open(addDealerModal)" class="btn btn-sm btn-outline-primary"><i
+                    class="bi bi-plus-circle"></i> Händler anlegen
+            </button>
+        </div>
+    </div>
+</div>
+
+
+<ng-template #addDealerModal let-modal>
+    <div class="modal-header">
+        <h4 class="modal-title" id="modal-basic-title-dealer">Händler anlegen</h4>
+        <button (click)="modal.dismiss('Cross click')" aria-label="Close" class="btn-close" data-bs-dismiss="modal"
+                type="button"></button>
+    </div>
+    <div class="modal-body">
+        <form #dealerForm="ngForm">
+            <div class="mb-3">
+                <label class="form-label" for="postalCode-add">PLZ</label>
+                <input [(ngModel)]="newDealer.postalCode" class="form-control" id="postalCode-add" name="assignment"
+                       required type="number">
+                <div *ngIf="errorMessagePostcode" class="alert alert-danger mt-3">{{ errorMessagePostcode }}</div>
+
+            </div>
+            <div class="mb-3">
+                <label class="form-label" for="street-add">Straße</label>
+                <input [(ngModel)]="newDealer.street" class="form-control" id="street-add" name="branch" required
+                       type="text">
+                <div *ngIf="errorMessageStreet" class="alert alert-danger mt-3">{{ errorMessageStreet }}</div>
+
+            </div>
+            <div class="mb-3">
+                <label class="form-label" for="houseNumber-add">Haus Nr.</label>
+                <input [(ngModel)]="newDealer.houseNumber" class="form-control" id="houseNumber-add" name="vehicleOwner"
+                       required type="number">
+                <div *ngIf="errorMessageHouseNr" class="alert alert-danger mt-3">{{ errorMessageHouseNr }}</div>
+            </div>
+            <div class="mb-3">
+                <label class="form-label" for="city-add">Stadt</label>
+                <input [(ngModel)]="newDealer.city" class="form-control" id="city-add" name="vehicleRegNo" required
+                       type="text">
+                <div *ngIf="errorMessageCity" class="alert alert-danger mt-3">{{ errorMessageCity }}</div>
+            </div>
+            <div class="row">
+                <div class="col-6">
+                    <div class="mb-3">
+                        <label class="form-label" for="openingTime-add">Öffnet um</label>
+                        <input [(ngModel)]="newDealer.openingTime" class="form-control" id="openingTime-add" name="date"
+                               required type="time">
+                    </div>
+                </div>
+                <div class="col-6">
+                    <div class="mb-3">
+                        <label class="form-label" for="closingTime-add">Schließt um</label>
+                        <input [(ngModel)]="newDealer.closingTime" class="form-control" id="closingTime-add" name="date"
+                               required type="time">
+                    </div>
+                </div>
+                <div class="col-12">
+                    <div *ngIf="errorMessageOpeningtime" class="alert alert-danger mt-3">{{ errorMessageOpeningtime }}
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+    <div class="modal-footer">
+        <button (click)="modal.dismiss('Cancel click')" class="btn btn-outline-dark" type="button">Abbruch</button>
+        <button (click)="saveDealer(modal)" class="btn btn-primary" type="button">Speichern</button>
+    </div>
+</ng-template>
+
+
+<ng-template #editDealerModal let-modal>
+    <div class="modal-header">
+        <h4 class="modal-title">Händler bearbeiten</h4>
+        <button (click)="modal.dismiss('Cross click')" aria-label="Close" class="btn-close" data-bs-dismiss="modal"
+                type="button"></button>
+    </div>
+    <div *ngIf="selectedDealer" class="modal-body">
+        <form #dealerForm="ngForm">
+            <!-- PLZ -->
+            <div class="mb-3">
+                <label class="form-label" for="postalCode">PLZ</label>
+                <input [(ngModel)]="selectedDealer.postalCode" class="form-control" id="postalCode" name="postalCode"
+                       required type="number">
+                <div *ngIf="errorMessagePostcode" class="alert alert-danger mt-3">{{ errorMessagePostcode }}</div>
+            </div>
+
+            <!-- Straße -->
+            <div class="mb-3">
+                <label class="form-label" for="street">Straße</label>
+                <input [(ngModel)]="selectedDealer.street" class="form-control" id="street" name="street" required
+                       type="text">
+                <div *ngIf="errorMessageStreet" class="alert alert-danger mt-3">{{ errorMessageStreet }}</div>
+            </div>
+
+            <!-- Hausnummer -->
+            <div class="mb-3">
+                <label class="form-label" for="houseNumber">Haus Nr.</label>
+                <input [(ngModel)]="selectedDealer.houseNumber" class="form-control" id="houseNumber" name="houseNumber"
+                       required type="number">
+                <div *ngIf="errorMessageHouseNr" class="alert alert-danger mt-3">{{ errorMessageHouseNr }}</div>
+            </div>
+
+            <!-- Stadt -->
+            <div class="mb-3">
+                <label class="form-label" for="city">Stadt</label>
+                <input [(ngModel)]="selectedDealer.city" class="form-control" id="city" name="city" required
+                       type="text">
+                <div *ngIf="errorMessageCity" class="alert alert-danger mt-3">{{ errorMessageCity }}</div>
+            </div>
+
+            <!-- Öffnungszeit und Schließzeit -->
+            <div class="row">
+                <div class="col">
+                    <div class="mb-3">
+                        <label class="form-label" for="openingTime">Öffnet um</label>
+                        <input [(ngModel)]="selectedDealer.openingTime" class="form-control" id="openingTime"
+                               name="openingTime" required type="time">
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="mb-3">
+                        <label class="form-label" for="closingTime">Schließt um</label>
+                        <input [(ngModel)]="selectedDealer.closingTime" class="form-control" id="closingTime"
+                               name="closingTime" required type="time">
+                    </div>
+                </div>
+            </div>
+            <div *ngIf="errorMessageOpeningtime" class="alert alert-danger mt-3">{{ errorMessageOpeningtime }}</div>
+        </form>
+    </div>
+    <div class="modal-footer">
+        <button (click)="modal.dismiss('Cancel click')" class="btn btn-outline-dark" type="button">Abbruch</button>
+        <button (click)="updateDealer(modal)" class="btn btn-primary" type="button">Speichern</button>
+    </div>
+</ng-template>
+
+
+<!-- Toast Notification Container -->
+<div class="toast-container position-fixed bottom-0 end-0 p-3">
+    <div *ngIf="toastMessage" aria-atomic="true" aria-live="assertive" class="toast show" role="alert">
+        <div class="toast-header">
+            <strong class="me-auto">Notification</strong>
+            <button (click)="closeToast()" class="btn-close" type="button"></button>
+        </div>
+        <div class="toast-body">
+            {{ toastMessage }}
+        </div>
+    </div>
+</div>

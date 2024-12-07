@@ -1,0 +1,86 @@
+/* Kalender Container - schmaler gestalten */
+.calendar-container {
+  width: 80%; /* Breite des Containers auf 80% des Viewports reduzieren */
+  height: calc(100vh - 150px); /* Höhe unverändert lassen */
+  margin: 20px auto; /* Abstand an den Seiten und oben/unten für eine mittige Platzierung */
+  padding: 10px; /* Polsterung für ästhetische Zwecke */
+  background-color: #ffffff; /* Hintergrundfarbe */
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Leichter Schatten für mehr Tiefe */
+  border-radius: 10px; /* Abgerundete Ecken */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* Kalender */
+.full-calendar {
+  width: 100%;
+  height: 100%;
+  max-width: 100%;
+  max-height: 100%;
+}
+
+/* Kalender Widget */
+.fc {
+  width: 100%;
+  height: calc(100vh - 180px); /* Kalenderhöhe: gesamte Fensterhöhe minus Platz für andere Inhalte */
+  max-width: 100%;
+  overflow: hidden; /* Verhindert unnötiges Scrollen */
+}
+
+/* Anpassungen für Tageszellen im Kalender */
+.fc-daygrid-day {
+  background-color: #f8f9fa; /* Helles Grau für bessere Übersicht */
+  min-height: 100px; /* Mindesthöhe für die Kalenderzellen */
+  height: 100px; /* Festgesetzte Höhe für alle Tageszellen, um Gleichmäßigkeit zu bewahren */
+  overflow: hidden; /* Verhindert, dass der Inhalt die Höhe der Zellen beeinflusst */
+}
+
+/* Wochenüberschriften in Schwarz und fett */
+.fc-theme-standard .fc-col-header-cell-cushion {
+  color: #000; /* Farbe auf Schwarz setzen */
+  font-weight: bold; /* Fettgedruckt */
+}
+
+.fc-theme-standard .fc-col-header-cell {
+  background-color: #e0e0e0; /* Helles Grau */
+}
+
+/* Hintergrundfarbe für den aktuellen Tag */
+.fc-day-today {
+  background-color: #e7f1ff !important; /* Hellblauer Hintergrund für den heutigen Tag */
+}
+
+/* Style für Events */
+.fc-event {
+  padding: 4px;
+  border-radius: 4px;
+  background-color: #007bff; /* Primäre Farbe für Events */
+  color: white; /* Weißer Text für bessere Lesbarkeit */
+  border: none;
+  overflow: hidden; /* Verhindert, dass Events die Höhe der Zellen beeinflussen */
+  white-space: nowrap; /* Kein Zeilenumbruch */
+  text-overflow: ellipsis; /* "..." anzeigen, wenn der Text zu lang ist */
+}
+
+/* Trennlinien im Kalender */
+.fc-theme-standard .fc-scrollgrid,
+.fc-theme-standard td,
+.fc-theme-standard th,
+.fc-scrollgrid,
+.fc-scrollgrid-sync-inner {
+  border-color: #666; /* Etwas dunklere Farbe für die Trennlinien */
+  border-width: 1.5px; /* Etwas dickere Trennlinien für bessere Sichtbarkeit */
+}
+
+/* Anpassungen für Event-Container innerhalb der Zellen */
+.fc-daygrid-day-events {
+  max-height: 90px; /* Maximale Höhe für die Events, damit die Zellen nicht zu groß werden */
+  overflow-y: auto; /* Scrollbar anzeigen, falls es zu viele Events gibt */
+}
+
+/* Sicherstellen, dass die Tageszahlen immer schwarz sind und fett dargestellt werden */
+.fc-daygrid-day-number {
+  color: #000; /* Farbe für die Datumszahlen */
+  font-weight: bold; /* Fettgedruckt für bessere Sichtbarkeit */
+}

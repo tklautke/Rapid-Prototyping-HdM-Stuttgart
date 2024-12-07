@@ -1,0 +1,120 @@
+<div class="container py-5">
+    <div class="row justify-content-center my-5">
+        <div class="col-md-6 col-lg-4">
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    <h5 class="card-title text-center mb-4">{{ isRegister ? 'Registrieren' : 'Login' }}</h5>
+
+                    <!-- Login-Formular -->
+                    <form (ngSubmit)="onLogin()" *ngIf="!isRegister">
+                        <div class="form-group mb-4">
+                            <label class="form-label" for="email">Email</label>
+                            <input
+                                    [(ngModel)]="email"
+                                    class="form-control"
+                                    id="email"
+                                    name="email"
+                                    placeholder="Ihre Email-Adresse"
+                                    required
+                                    type="email"
+                            />
+                        </div>
+                        <div class="form-group mb-4">
+                            <label class="form-label" for="password">Passwort</label>
+                            <input
+                                    [(ngModel)]="password"
+                                    class="form-control"
+                                    id="password"
+                                    name="password"
+                                    placeholder="Ihr Passwort"
+                                    required
+                                    type="password"
+                            />
+                        </div>
+                        <button class="btn btn-primary btn-block mb-4 w-100" type="submit">
+                            Login
+                        </button>
+                    </form>
+
+                    <!-- Registrierungsformular -->
+                    <form (ngSubmit)="onRegister()" *ngIf="isRegister">
+                        <div class="form-group mb-4">
+                            <label class="form-label" for="firstname">Vorname</label>
+                            <input
+                                    [(ngModel)]="firstname"
+                                    class="form-control"
+                                    id="firstname"
+                                    name="firstname"
+                                    placeholder="Ihr Vorname"
+                                    required
+                                    type="text"
+                            />
+                            <div *ngIf="errorMessageFirstname" class="alert alert-danger mt-3">
+                                {{ errorMessageFirstname }}
+                            </div>
+                        </div>
+                        <div class="form-group mb-4">
+                            <label class="form-label" for="lastname">Nachname</label>
+                            <input
+                                    [(ngModel)]="lastname"
+                                    class="form-control"
+                                    id="lastname"
+                                    name="lastname"
+                                    placeholder="Ihr Nachname"
+                                    required
+                                    type="text"
+                            />
+                            <div *ngIf="errorMessageLastname" class="alert alert-danger mt-3">
+                                {{ errorMessageLastname }}
+                            </div>
+                        </div>
+                        <div class="form-group mb-4">
+                            <label class="form-label" for="email">Email</label>
+                            <input
+                                    [(ngModel)]="email"
+                                    class="form-control"
+                                    id="email"
+                                    name="email"
+                                    placeholder="Ihre Email-Adresse"
+                                    required
+                                    type="email"
+                            />
+                            <div *ngIf="errorMessageEmail" class="alert alert-danger mt-3">
+                                {{ errorMessageEmail }}
+                            </div>
+                        </div>
+                        <div class="form-group mb-4">
+                            <label class="form-label" for="password">Passwort</label>
+                            <input
+                                    [(ngModel)]="password"
+                                    class="form-control"
+                                    id="password"
+                                    name="password"
+                                    placeholder="Ihr Passwort"
+                                    required
+                                    type="password"
+                            />
+                            <div *ngIf="errorMessagePassword" class="alert alert-danger mt-3">
+                                {{ errorMessagePassword }}
+                            </div>
+                        </div>
+                        <button class="btn btn-primary btn-block mb-4 w-100" type="submit">
+                            Registrieren
+                        </button>
+                    </form>
+
+                    <div *ngIf="errorMessage" class="alert alert-danger mt-3">
+                        {{ errorMessage }}
+                    </div>
+
+                    <!-- Wechsel zwischen Login und Registrierung -->
+                    <div class="text-center mt-3">
+                        <button (click)="toggleForm()" class="btn btn-link p-0">
+                            {{ isRegister ? 'Schon einen Account? Login' : 'Noch keinen Account? Jetzt registrieren' }}
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,134 @@
+<div class="calendar-container">
+    <full-calendar [options]="calendarOptions"></full-calendar>
+</div>
+<!-- Bootstrap Modal -->
+<div aria-hidden="true" aria-labelledby="appointmentModalLabel" class="modal fade" id="appointmentModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="appointmentModalLabel">{{ selectedEvent?.title }}</h5>
+                <button aria-label="Close" class="btn-close" data-bs-dismiss="modal" type="button"></button>
+            </div>
+            <div class="modal-body">
+                <p><strong>Zeit:</strong> {{ selectedEvent?.time }}</p>
+                <p><strong>Datum:</strong> {{ selectedEvent?.date }}</p>
+                <p>
+                    <strong>Fahrzeugbesitzer:</strong> {{ selectedEvent?.vehicleOwner?.firstname }} {{ selectedEvent?.vehicleOwner?.lastname }}
+                </p>
+                <p><strong>Händler:</strong> {{ selectedEvent?.branch }}</p>
+                <p><strong>Status:</strong> {{ selectedEvent?.status }}</p>
+                <p><strong>Beschreibung:</strong> {{ selectedEvent?.assignment }}</p>
+            </div>
+            <div class="modal-footer">
+                <button (click)="cancelAppointment()" class="btn btn-danger" type="button">Absagen</button>
+                <button (click)="editAppointment()" class="btn btn-primary" type="button">Bearbeiten</button>
+                <button class="btn btn-secondary" data-bs-dismiss="modal" type="button">Schließen</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Bootstrap Modal zur Bearbeitung eines Termins -->
+<div aria-hidden="true" aria-labelledby="editAppointmentModalLabel" class="modal fade" id="editAppointmentModal"
+     tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="editAppointmentModalLabel">Termin bearbeiten</h5>
+                <button aria-label="Close" class="btn-close" data-bs-dismiss="modal" type="button"></button>
+            </div>
+            <div class="modal-body">
+                <form>
+                    <div class="mb-3">
+                        <label class="form-label" for="editTimeInput">Zeit</label>
+                        <input [(ngModel)]="selectedEvent.time" class="form-control" id="editTimeInput" name="time"
+                               type="time">
+                        <div *ngIf="errorMessageTime" class="alert alert-danger mt-3">{{ errorMessageTime }}</div>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label" for="editDateInput">Datum</label>
+                        <input [(ngModel)]="selectedEvent.date" class="form-control" id="editDateInput" name="date"
+                               type="date">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label" for="branchSelect">Händler</label>
+                        <select [(ngModel)]="selectedEvent.branch" class="form-control" id="branchSelect" name="branch">
+                            <option *ngFor="let dealer of dealers"
+                                    [value]="dealer.city">{{ dealer.postalCode }} {{ dealer.city }}
+                                - {{ dealer.street }} {{ dealer.houseNumber }}
+                            </option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label" for="editAssignmentInput">Auftrag</label>
+                        <textarea [(ngModel)]="selectedEvent.assignment" class="form-control" id="editAssignmentInput"
+                                  name="assignment"></textarea>
+                        <div *ngIf="errorMessageAssignment"
+                             class="alert alert-danger mt-3">{{ errorMessageAssignment }}
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" data-bs-dismiss="modal" type="button">Abbrechen</button>
+                <button (click)="saveEditedAppointment()" class="btn btn-primary" type="button">Speichern</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Bootstrap Modal zur Erstellung eines neuen Termins -->
+<div aria-hidden="true" aria-labelledby="addAppointmentModalLabel" class="modal fade" id="addAppointmentModal"
+     tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="addAppointmentModalLabel">Neuen Termin hinzufügen</h5>
+                <button aria-label="Close" class="btn-close" data-bs-dismiss="modal" type="button"></button>
+            </div>
+            <div class="modal-body">
+                <form>
+                    <div class="mb-3">
+                        <label class="form-label" for="dateInput">Datum</label>
+                        <input [(ngModel)]="selectedEvent.date" class="form-control" id="dateInput" name="date"
+                               readonly type="text">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label" for="timeInput">Zeit</label>
+                        <input [(ngModel)]="selectedEvent.time" class="form-control" id="timeInput" name="time"
+                               type="time">
+                        <div *ngIf="errorMessageTime" class="alert alert-danger mt-3">{{ errorMessageTime }}</div>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label" for="vehicleRegNoInput">Kennzeichen</label>
+                        <input [(ngModel)]="selectedEvent.vehicleRegNo" class="form-control" id="vehicleRegNoInput"
+                               name="vehicleRegNo" type="text">
+                        <div *ngIf="errorMessageVehicleRegNo"
+                             class="alert alert-danger mt-3">{{ errorMessageVehicleRegNo }}
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label" for="branchSelect">Händler</label>
+                        <select [(ngModel)]="selectedEvent.branch" class="form-control" id="branchSelect" name="branch">
+                            <option *ngFor="let dealer of dealers"
+                                    [value]="dealer.city">{{ dealer.postalCode }} {{ dealer.city }}
+                                - {{ dealer.street }} {{ dealer.houseNumber }}
+                            </option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label" for="assignmentInput">Auftrag</label>
+                        <textarea [(ngModel)]="selectedEvent.assignment" class="form-control" id="assignmentInput"
+                                  name="assignment"></textarea>
+                        <div *ngIf="errorMessageAssignment"
+                             class="alert alert-danger mt-3">{{ errorMessageAssignment }}
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" data-bs-dismiss="modal" type="button">Abbrechen</button>
+                <button (click)="saveNewAppointment()" class="btn btn-primary" type="button">Speichern</button>
+            </div>
+        </div>
+    </div>
+</div>

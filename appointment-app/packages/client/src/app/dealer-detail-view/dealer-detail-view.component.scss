@@ -1,0 +1,51 @@
+.delete-btn {
+  background-color: transparent;
+  border: none;
+  border-radius: 50%;
+  width: 30px;
+  height: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.delete-btn i {
+  color: black;
+  font-size: 16px;
+}
+
+.delete-btn:hover {
+  background-color: #ffcccc;
+  color: red;
+}
+
+.delete-btn:hover i {
+  color: red;
+}
+
+.edit-btn {
+  background-color: transparent;
+  border: none;
+  border-radius: 50%;
+  width: 30px;
+  height: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.edit-btn i {
+  color: black;
+  font-size: 16px;
+}
+
+.edit-btn:hover {
+  background-color: #cce5ff;
+  color: blue;
+}
+
+.edit-btn:hover i {
+  color: blue;
+}

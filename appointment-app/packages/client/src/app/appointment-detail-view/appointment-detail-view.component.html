@@ -1,0 +1,209 @@
+<div class="container py-3">
+    <div class="row my-3">
+        <div class="col">
+            <table class="table table-striped table-hover">
+                <thead class="thead-dark">
+                <tr>
+                    <th>Auftrag</th>
+                    <th>Händler</th>
+                    <th>Fahrzeugsbesitzer</th>
+                    <th>Kennzeichen</th>
+                    <th>Status</th>
+                    <th>Datum</th>
+                    <th>Uhrzeit</th>
+                    <th></th>
+                    <th></th>
+                </tr>
+                </thead>
+                <tbody>
+                <ng-container *ngIf="authService.isDealer()">
+                    <tr *ngFor="let appointment of appointmentList">
+                        <td>{{ appointment.assignment }}</td>
+                        <td>{{ appointment.branch }}</td>
+                        <td>{{ appointment.vehicleOwner.firstname || 'Unbekannt' }} {{ appointment.vehicleOwner.lastname || 'Unbekannt' }}</td>
+                        <td>{{ appointment.vehicleRegNo }}</td>
+                        <td>{{ getStatusDisplay(appointment.status) }}</td>
+                        <td>{{ appointment.date }}</td>
+                        <td>{{ appointment.time }} Uhr</td>
+                        <td>
+                            <button (click)="openEditModalAppointment(editAppointmentModal, appointment)"
+                                    class="btn btn-sm edit-btn"><i class="bi bi-pencil-square"></i></button>
+                        </td>
+                        <td>
+                            <button (click)="deleteAppointment(appointment.id)" class="btn btn-sm delete-btn"><i
+                                    class="bi bi-trash3-fill"></i></button>
+                        </td>
+                    </tr>
+                </ng-container>
+
+                <ng-container *ngIf="!authService.isDealer()">
+                    <tr *ngFor="let appointment of filteredAppointments">
+                        <td>{{ appointment.assignment }}</td>
+                        <td>{{ appointment.branch }}</td>
+                        <td>{{ appointment.vehicleOwner.firstname || 'Unbekannt' }} {{ appointment.vehicleOwner.lastname || 'Unbekannt' }}</td>
+                        <td>{{ appointment.vehicleRegNo }}</td>
+                        <td>{{ getStatusDisplay(appointment.status) }}</td>
+                        <td>{{ appointment.date }}</td>
+                        <td>{{ appointment.time }} Uhr</td>
+                        <td>
+                            <button (click)="openEditModalAppointment(editAppointmentModal, appointment)"
+                                    class="btn btn-sm edit-btn"><i class="bi bi-pencil-square"></i></button>
+                        </td>
+                        <td>
+                            <button (click)="deleteAppointment(appointment.id)" class="btn btn-sm delete-btn"><i
+                                    class="bi bi-trash3-fill"></i></button>
+                        </td>
+                    </tr>
+                </ng-container>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div *ngIf="!authService.isDealer()" class="row my-3">
+        <div class="col">
+            <button (click)="open(addAppointmentModal)" class="btn btn-sm btn-outline-primary">
+                <i class="bi bi-plus-circle"></i> Termin anlegen
+            </button>
+        </div>
+    </div>
+</div>
+
+<!-- Add Appointment Modal -->
+<ng-template #addAppointmentModal let-modal>
+    <div class="modal-header">
+        <h4 class="modal-title" id="modal-basic-title-appointment">Termin anlegen</h4>
+        <button (click)="modal.dismiss('Cross click')" aria-label="Close" class="btn-close" data-bs-dismiss="modal"
+                type="button"></button>
+    </div>
+    <div class="modal-body">
+        <form #appointmentForm="ngForm">
+            <div class="mb-3">
+                <label class="form-label" for="assignment-add">Auftrag</label>
+                <input [(ngModel)]="newAppointment.assignment" class="form-control" id="assignment-add"
+                       name="assignment" required type="text">
+                <div *ngIf="errorMessageAssignment" class="alert alert-danger mt-3">{{ errorMessageAssignment }}</div>
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label" for="branch-add">Händler</label>
+                <select (ngModelChange)="updateOpeningHours()" [(ngModel)]="newAppointment.branch" class="form-control form-select"
+                        id="branch-add" name="branch">
+                    <option *ngFor="let dealer of dealerList"
+                            [value]="dealer.city">{{ dealer.postalCode }} {{ dealer.city }}
+                        - {{ dealer.street }} {{ dealer.houseNumber }}
+                    </option>
+                </select>
+                <small class="text-muted mt-1 d-block">{{ dealerOpeningHours }}</small>
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label" for="vehicleRegNo-add">Kennzeichen</label>
+                <input [(ngModel)]="newAppointment.vehicleRegNo" class="form-control" id="vehicleRegNo-add"
+                       name="vehicleRegNo" required type="text">
+                <div *ngIf="errorMessageVehicleRegNo" class="alert alert-danger mt-3">{{ errorMessageVehicleRegNo }}
+                </div>
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label" for="status-add">Status</label>
+                <select [(ngModel)]="newAppointment.status" [disabled]="!authService.isDealer()" class="form-control form-select"
+                        id="status-add" name="status" required>
+                    <option value="OPEN">Offen</option>
+                    <option value="IN_PROGRESS">In Bearbeitung</option>
+                    <option value="COMPLETED">Beendet</option>
+                </select>
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label" for="date-add">Datum</label>
+                <input [(ngModel)]="newAppointment.date" class="form-control" id="date-add" name="date" required
+                       type="date">
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label" for="time-add">Uhrzeit</label>
+                <input [(ngModel)]="newAppointment.time" class="form-control" id="time-add" name="time" required
+                       type="time">
+                <div *ngIf="errorMessageTime" class="alert alert-danger mt-3">{{ errorMessageTime }}</div>
+            </div>
+        </form>
+    </div>
+    <div class="modal-footer">
+        <button (click)="modal.dismiss('Cancel click')" class="btn btn-outline-dark" type="button">Abbruch</button>
+        <button (click)="saveAppointment(modal)" class="btn btn-primary" type="button">Speichern</button>
+    </div>
+</ng-template>
+
+
+<!-- Edit Appointment Modal -->
+<ng-template #editAppointmentModal let-modal>
+    <div class="modal-header">
+        <h4 class="modal-title">Termin bearbeiten</h4>
+        <button (click)="modal.dismiss('Cross click')" aria-label="Close" class="btn-close" data-bs-dismiss="modal"
+                type="button"></button>
+    </div>
+    <div *ngIf="selectedAppointment" class="modal-body">
+        <form #appointmentForm="ngForm">
+            <!-- Auftrag -->
+            <div class="mb-3">
+                <label class="form-label" for="assignment">Auftrag</label>
+                <input [(ngModel)]="selectedAppointment.assignment" class="form-control" id="assignment"
+                       name="assignment" required type="text">
+                <div *ngIf="errorMessageAssignment" class="alert alert-danger mt-3">{{ errorMessageAssignment }}</div>
+            </div>
+
+            <!-- Händler -->
+            <div class="mb-3">
+                <label class="form-label" for="branch">Händler</label>
+                <select (ngModelChange)="updateOpeningHoursForUpdate()" [(ngModel)]="selectedAppointment.branch"
+                        class="form-control form-select" id="branch" name="branch">
+                    <option *ngFor="let dealer of dealerList"
+                            [value]="dealer.city">{{ dealer.postalCode }} {{ dealer.city }}
+                        - {{ dealer.street }} {{ dealer.houseNumber }}
+                    </option>
+                </select>
+                <small class="text-muted mt-1 d-block">{{ dealerOpeningHours }}</small>
+            </div>
+
+            <!-- Kennzeichen -->
+            <div class="mb-3">
+                <label class="form-label" for="vehicleRegNo">Kennzeichen</label>
+                <input [(ngModel)]="selectedAppointment.vehicleRegNo" class="form-control" id="vehicleRegNo"
+                       name="vehicleRegNo" required type="text">
+                <div *ngIf="errorMessageVehicleRegNo" class="alert alert-danger mt-3">{{ errorMessageVehicleRegNo }}
+                </div>
+            </div>
+
+            <!-- Status -->
+            <div class="mb-3">
+                <label class="form-label" for="status">Status</label>
+                <select [(ngModel)]="selectedAppointment.status" [disabled]="!authService.isDealer()" class="form-control form-select"
+                        id="status" name="status" required>
+                    <option value="OPEN">Offen</option>
+                    <option value="IN_PROGRESS">In Bearbeitung</option>
+                    <option value="COMPLETED">Beendet</option>
+                </select>
+            </div>
+
+            <!-- Datum -->
+            <div class="mb-3">
+                <label class="form-label" for="date">Datum</label>
+                <input [(ngModel)]="selectedAppointment.date" class="form-control" id="date" name="date" required
+                       type="date">
+            </div>
+
+            <!-- Uhrzeit -->
+            <div class="mb-3">
+                <label class="form-label" for="time">Uhrzeit</label>
+                <input [(ngModel)]="selectedAppointment.time" class="form-control" id="time" name="time" required
+                       type="time">
+                <div *ngIf="errorMessageTime" class="alert alert-danger mt-3">{{ errorMessageTime }}</div>
+            </div>
+        </form>
+    </div>
+    <div class="modal-footer">
+        <button (click)="modal.dismiss('Cancel click')" class="btn btn-outline-dark" type="button">Abbruch</button>
+        <button (click)="updateAppointment(modal)" class="btn btn-primary" type="button">Speichern</button>
+    </div>
+</ng-template>

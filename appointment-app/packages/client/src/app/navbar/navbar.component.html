@@ -1,0 +1,44 @@
+<nav class="navbar navbar-expand-sm navbar-light bg-light">
+    <div class="container-fluid">
+        <a class="navbar-brand">
+            <img alt="logo" height="50" src="/logo.png">
+        </a>
+        <button
+                aria-controls="navbarSupportedContent"
+                aria-expanded="false"
+                aria-label="Toggle navigation"
+                class="navbar-toggler"
+                data-bs-target="#navbarSupportedContent"
+                data-bs-toggle="collapse"
+                type="button">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                <li *ngIf="this.authService.isAuthenticated()" class="nav-item">
+                    <a class="nav-link" routerLink="/appointment" routerLinkActive="active">Termine</a>
+                </li>
+                <li *ngIf="this.authService.isAuthenticated() && this.authService.isDealer()" class="nav-item">
+                    <a class="nav-link" routerLink="/dealer" routerLinkActive="active">Händler</a>
+                </li>
+                <li *ngIf="this.authService.isAuthenticated()" class="nav-item">
+                    <a class="nav-link" routerLink="/calender" routerLinkActive="active">Kalender</a>
+                </li>
+            </ul>
+        </div>
+        <div *ngIf="this.authService.isAuthenticated()" class="my-2 my-sm-0">
+            <div class="d-flex">
+                <span class="fw-bold">{{ this.authService.getMailFromJWT() }}</span>
+                <div *ngIf="!this.authService.isDealer()" class="ms-2 text-muted">
+                    (Kunde)
+                </div>
+                <div *ngIf="this.authService.isDealer()" class="ms-2 text-muted">
+                    (Händler)
+                </div>
+            </div>
+        </div>
+        <button (click)="authService.logout()" *ngIf="this.authService.isAuthenticated()"
+                class="btn btn-outline-primary my-2 my-sm-0 ms-2">Logout
+        </button>
+    </div>
+</nav>
